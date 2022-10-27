@@ -8,11 +8,10 @@ public class Main {
         System.out.println("----------------------------------------------");
         System.out.println("Welcome to Titan Payment System!");
         displayAccountService();
-        System.out.print("Your selection: ");
-        int userSelection = scanner.nextInt();
+        int userSelection = getIntFromUser(scanner);
         while (true) {
             if (userSelection == 1)
-                new User();
+                new User(scanner);
 
             else if (userSelection == 2) {
                 System.out.print("Enter username: ");
@@ -23,33 +22,33 @@ public class Main {
                     System.out.println("Current Account: " + userName);
                     User currentUser = users.get(userName);
                     displayMenu();
-                    System.out.print("Pick an acion from the menu: ");
-                    int menuSelection = scanner.nextInt();
-                    while (menuSelection != 9) {
-                        switch (menuSelection) {
+                    userSelection = getIntFromUser(scanner);
+                    while (userSelection != 9) {
+                        switch (userSelection) {
 
                             case 1:
-                                currentUser.queryAccountInfo();
+                                currentUser.queryAccountInfo(scanner);
                                 break;
 
                             case 2:
-                                // uploadPurchases();
+                                currentUser.uploadPurchases(scanner);
                                 break;
 
                             case 3:
-                                // getMinimumTransaction();
+                                currentUser.getMinimumAndMaximumTransaction();
+                                wait(4000);
                                 break;
 
                             case 4:
-                                // getMaximumTransaction();
+                                currentUser.getAmountDue();
                                 break;
 
                             case 5:
-                                // getAmountDue();
+                                currentUser.getTotalAmountPaid();
                                 break;
 
                             case 6:
-                                // getTotalAmountPaid();
+                                currentUser.payCard(scanner);
                                 break;
 
                             case 7:
@@ -57,14 +56,16 @@ public class Main {
                                 break;
 
                             case 8:
-                                // displayPurchasesMade();
+                                currentUser.displayPurchasesMade();
+                                wait(4000);
                                 break;
 
                             default:
                                 System.out.println("Invalid option. Please try again!\n");
                         }
+                        displayMenu();
                         System.out.print("Pick an acion from the menu: ");
-                        menuSelection = scanner.nextInt();
+                        userSelection = scanner.nextInt();
                     }
 
                 } else
@@ -77,11 +78,10 @@ public class Main {
             }
 
             else
-                System.out.println("Invalid selection. Please try again!");
+                System.out.println("Invalid option. Please try again!");
 
             displayAccountService();
-            System.out.print("Your selection: ");
-            userSelection = scanner.nextInt();
+            userSelection = getIntFromUser(scanner);
         }
         scanner.close();
     }
@@ -98,13 +98,37 @@ public class Main {
         System.out.println("Menu selection:\n");
         System.out.println("1. Query account information");
         System.out.println("2. Upload purchases");
-        System.out.println("3. Get minimum transaction");
-        System.out.println("4. Get maximum transaction");
-        System.out.println("5. Get amount due");
-        System.out.println("6. Get total amount paid");
+        System.out.println("3. Get minimum and maximum transaction");
+        System.out.println("4. Get amount due");
+        System.out.println("5. Get total amount paid");
+        System.out.println("6. Pay card");
         System.out.println("7. Get payment history");
         System.out.println("8. Display all the purchases made");
         System.out.println("9. Exit\n");
     }
 
+    public static void wait(int miliSecond) {
+        try {
+            Thread.sleep(miliSecond);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static int getIntFromUser(Scanner scanner) {
+        int result = -1;
+        System.out.print("Pick an acion from the menu: ");
+        String userInput = scanner.next();
+        while (true) {
+            try {
+                result = Integer.parseInt(userInput);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println(userInput + " is not an integer. Please try again\n");
+                System.out.print("Pick an acion from the menu: ");
+                userInput = scanner.next();
+            }
+        }
+        return result;
+    }
 }
