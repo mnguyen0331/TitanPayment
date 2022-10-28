@@ -39,7 +39,7 @@ public class User {
         address = addressInput.trim();
 
         System.out.print("Enter your country: ");
-        String countryInput = userScanner.next();
+        String countryInput = userScanner.nextLine();
         country = countryInput.trim();
 
         creditCard = Card.getCardType(userScanner);

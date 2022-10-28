@@ -31,7 +31,7 @@ public class Purchase {
 
         System.out.print("Amount paid: ");
         amountPaid = scanner.nextDouble();
-        amountPaidUsingCard = amountPaid + amountPaid * userCard.TRANSACTION_FEE;
+        amountPaidUsingCard = amountPaid + amountPaid * (userCard.TRANSACTION_FEE + CONVENIENT_FEE);
         convinientAmount = amountPaid * CONVENIENT_FEE;
 
         status = "Due";

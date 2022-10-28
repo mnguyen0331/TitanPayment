@@ -21,8 +21,7 @@ public enum Card {
 
     public void addPurchase(Purchase newPurchase) {
         purchases.add(newPurchase);
-        double totalAmount = newPurchase.getAmountPaidUsingCard() + newPurchase.getConvenientAmount();
-        balance += totalAmount;
+        balance += newPurchase.getAmountPaidUsingCard();
     }
 
     public double getBalance() {
