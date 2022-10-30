@@ -1,4 +1,6 @@
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,13 +20,16 @@ public class User {
     public User(Scanner userScanner) {
 
         System.out.print("Enter your username: ");
-        String userNameInput = userScanner.next();
-        userName = userNameInput.trim();
+        userName = userScanner.next().trim();
+        while (wasUserNameExisted(userName)) {
+            System.out.println("Denied. Account \"" + userName + "\"already exists!");
+            System.out.print("Enter a different user name: ");
+            userName = userScanner.next().trim();
+        }
 
         System.out.print("Enter your password: ");
-        String passwordInput = userScanner.next();
-        password = passwordInput.trim();
-        userScanner.nextLine();
+        password = userScanner.next().trim();
+        userScanner.nextLine(); // consume a "\n" after next()
 
         System.out.print("Enter your full name: ");
         String fullNameInput = userScanner.nextLine();
@@ -47,33 +52,18 @@ public class User {
         users.put(userName, this);
     }
 
+    private boolean wasUserNameExisted(String userName) {
+        if (users.size() == 0)
+            return false;
+        return users.containsKey(userName);
+    }
+
     public String getUserName() {
         return userName;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public String toString() {
-        return "User(" + userName + "," + password + "," + fullName + "," + phoneNumber
-                + "," + address + "," + country + creditCard + ")";
     }
 
     public void queryAccountInfo(Scanner scanner) {
@@ -86,7 +76,7 @@ public class User {
         System.out.println("f. Get account's country");
         System.out.println("g. Go back\n");
         System.out.print("What would you like to query? ");
-        char querySelection = scanner.next().charAt(0);
+        char querySelection = scanner.nextLine().charAt(0);
         while (querySelection != 'g') {
             switch (querySelection) {
 
@@ -99,19 +89,19 @@ public class User {
                     break;
 
                 case 'c':
-                    System.out.println("Your account's full name is " + getFullName());
+                    System.out.println("Your account's full name is " + fullName);
                     break;
 
                 case 'd':
-                    System.out.println("Your account's phone number is " + getPhoneNumber());
+                    System.out.println("Your account's phone number is " + phoneNumber);
                     break;
 
                 case 'e':
-                    System.out.println("Your account's address is " + getAddress());
+                    System.out.println("Your account's address is " + address);
                     break;
 
                 case 'f':
-                    System.out.println("Your account's country is " + getCountry());
+                    System.out.println("Your account's country is " + country);
                     break;
 
                 default:
@@ -119,7 +109,7 @@ public class User {
             }
             System.out.println();
             System.out.print("What would you like to query? ");
-            querySelection = scanner.next().charAt(0);
+            querySelection = scanner.nextLine().charAt(0);
         }
     }
 
@@ -158,7 +148,7 @@ public class User {
 
     public void getAmountDue() {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
-        double amountDue = creditCard.getBalance() - creditCard.getPaidAmount();
+        double amountDue = creditCard.getBalance();
         System.out.println("Your " + creditCard + " due balance is: " + currency.format(amountDue));
     }
 
@@ -169,65 +159,95 @@ public class User {
     }
 
     public void payCard(Scanner scanner) {
-        double newPayAmount = 0;
         double amountDue = creditCard.getBalance();
-        double totalPaidAmount = creditCard.getPaidAmount();
-        double remainingDue = amountDue - totalPaidAmount;
         NumberFormat currency = NumberFormat.getCurrencyInstance();
-        if (remainingDue == 0) {
-            creditCard.resetBalance();
-            System.out.println("Denied! The current due amount is " + currency.format(remainingDue));
+        if (amountDue == 0) { // Not allow to pay
+            System.out.println("Denied! The current due amount is " + currency.format(amountDue));
+            return;
         }
-
-        else if (remainingDue < 10) { // Due is small
-            System.out.println("The due amount is " + currency.format(remainingDue));
-            System.out.print("Do you want to pay all of it? ");
-            String reply = scanner.next();
-            if (reply.equalsIgnoreCase("yes")) {
-                newPayAmount = remainingDue;
-                System.out.println("Success! You paid " + currency.format(newPayAmount));
-                System.out.println("Remaining amount due is: " + currency.format(remainingDue - newPayAmount));
-                creditCard.addPaidAmount(newPayAmount);
-            }
-        }
-
+        LocalDateTime paymentDateTime = LocalDateTime.now();
+        double newPaidAmount = 0;
+        System.out.println("The due amount is " + currency.format(amountDue));
+        System.out.print("Do you want to pay all of it? (yes or no) ");
+        String reply = scanner.nextLine();
+        if (reply.equalsIgnoreCase("yes")) // Option to pay all
+            newPaidAmount = amountDue;
         else {
-            System.out.print("How much do you want to pay? ");
-            String payAmountInput = scanner.next();
-            while (true) {
-                try {
-                    newPayAmount = Double.parseDouble(payAmountInput);
-                    if (Double.compare(newPayAmount, remainingDue) > 0) {
-                        System.out.println("The due amount is " + currency.format(remainingDue));
-                        System.out.println("You are overpaying! Please try again.\n");
-                        System.out.print("How much do you want to pay? ");
-                        payAmountInput = scanner.next();
-                    } else {
-                        System.out.println("Success! You paid " + currency.format(newPayAmount));
-                        creditCard.addPaidAmount(newPayAmount);
-                        break;
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println(payAmountInput + " is not a number. Please try again\n");
-                    System.out.print("How much do you want to pay? ");
-                    payAmountInput = scanner.next();
-                }
+            newPaidAmount = Helper.getPositiveDouble(scanner);
+            if (Double.compare(newPaidAmount, amountDue) > 0) {
+                System.out.println("You are overpaying! Please try again.");
+                return;
             }
         }
-
+        System.out.println("Success! " + "Your " + creditCard + "was credited " + currency.format(newPaidAmount));
+        creditCard.addPaidAmount(newPaidAmount);
+        creditCard.balanceAdjusted(newPaidAmount);
+        Payment newPayment = new Payment(creditCard, paymentDateTime, newPaidAmount);
+        creditCard.addPayment(newPayment);
     }
 
-    public void displayPurchasesMade() {
+    public void getPaymentHistory() {
+        ArrayList<Payment> payments = creditCard.getPayments();
+        if (payments.size() == 0)
+            System.out.println("\nThere is no payment to display");
+        else {
+            System.out.println(payments);
+        }
+    }
+
+    public void displayPurchasesMade(Scanner scanner) {
         ArrayList<Purchase> purchases = creditCard.getPurchases();
-        System.out.println("\nList of purchases\n");
         if (purchases.size() == 0) {
             System.out.println(creditCard + " does not have any purchase.");
         } else {
             purchases.sort(Comparator.comparing(Purchase::getDate));
-            for (Purchase purchase : purchases) {
-                System.out.println(purchase);
-                System.out.println();
+            System.out.print("Do you want to display all purchases made? (yes or no): ");
+            String reply = scanner.nextLine();
+            if (reply.equalsIgnoreCase("yes")) {
+                Helper.wait(1000);
+                System.out.println(purchases);
             }
+
+            else {
+                int purchasesSize = purchases.size();
+                LocalDate latestDate = purchases.get(purchasesSize - 1).getDate();
+                System.out.println("The latest date is " + Helper.formatDate(latestDate));
+                System.out.println("Enter the appropriate range of dates to view purchases:");
+                LocalDate dateFrom = Helper.getDateFromInput(scanner);
+                LocalDate dateTo = Helper.getDateFromInput(scanner);
+                while (!Helper.areDatesCorrect(dateFrom, dateTo, latestDate)) {
+                    System.out.println("The latest date is " + Helper.formatDate(latestDate));
+                    System.out.println("Enter the appropriate range of dates to view purchases:");
+                    dateFrom = Helper.getDateFromInput(scanner);
+                    dateTo = Helper.getDateFromInput(scanner);
+                }
+                Helper.wait(1000);
+                int startIndex = -1;// index of date that is later or equal to dateFrom
+                int endIndex = -1; // index of date that is sooner or equal to dateTo
+                int i = 0;
+                int j = purchases.size() - 1;
+                while (i < j) {
+                    LocalDate lookUpStartDate = purchases.get(i).getDate();
+                    LocalDate lookUpEndDate = purchases.get(j).getDate();
+
+                    if (lookUpStartDate.compareTo(dateFrom) >= 0)
+                        startIndex = i;
+                    else
+                        i++;
+
+                    if (lookUpEndDate.compareTo(dateTo) <= 0)
+                        endIndex = j;
+                    else
+                        j--;
+
+                    if (startIndex != -1 && endIndex != -1)
+                        break;
+                }
+
+                System.out.println(purchases.subList(startIndex, endIndex + 1)); // [startIndex, endIndex)
+
+            }
+
         }
     }
 }

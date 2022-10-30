@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.text.NumberFormat;
 import java.util.Scanner;
 
@@ -20,17 +19,16 @@ public class Purchase {
     public Purchase(Scanner scanner, Card userCard) {
 
         System.out.print("Enter purchase name: ");
-        name = scanner.nextLine();
         scanner.nextLine();
+        name = scanner.nextLine();
 
-        date = getDateFromInput(scanner);
+        date = Helper.getDateFromInput(scanner);
 
         billingCycle = fitDateIntoBillingCycle(date.getMonthValue(), date.getYear());
 
         cardUse = userCard;
 
-        System.out.print("Amount paid: ");
-        amountPaid = scanner.nextDouble();
+        amountPaid = Helper.getPositiveDouble(scanner);
         amountPaidUsingCard = amountPaid + amountPaid * (userCard.TRANSACTION_FEE + CONVENIENT_FEE);
         convinientAmount = amountPaid * CONVENIENT_FEE;
 
@@ -53,6 +51,10 @@ public class Purchase {
         return convinientAmount;
     }
 
+    public String getBillingCycle() {
+        return billingCycle;
+    }
+
     public void changeStatus() {
         status = "Paid";
     }
@@ -60,35 +62,14 @@ public class Purchase {
     public String toString() {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        return "Purchase name: " + name
+        return "\nPurchase name: " + name + "\n"
                 + "Date: " + date.format(format) + "\n"
                 + "Purchase card: " + cardUse + "\n"
                 + "Amount paid: " + currency.format(amountPaid) + "\n"
                 + "Amount paid using card: " + currency.format(amountPaidUsingCard) + "\n"
                 + "Convenient amount: " + currency.format(convinientAmount) + "\n"
                 + "Billing cycle: " + billingCycle + "\n"
-                + "Status: " + status;
-    }
-
-    private LocalDate getDateFromInput(Scanner scanner) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        System.out.print("Date (Entered as MM/dd/yyyy): ");
-        String dateInput = scanner.next();
-        LocalDate date = null;
-        while (true) {
-            try {
-                date = LocalDate.parse(dateInput, format);
-                break;
-
-            } catch (DateTimeParseException e) {
-                System.out.println("\nInvalid date. Please try again\n");
-                System.out.print("Date (Entered as MM/dd/yyyy): ");
-                dateInput = scanner.next();
-            }
-        }
-
-        return date;
-
+                + "Status: " + status + "\n";
     }
 
     private String fitDateIntoBillingCycle(int month, int year) {

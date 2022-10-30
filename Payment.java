@@ -1,21 +1,23 @@
 import java.text.NumberFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Payment {
     private Card card;
-    private LocalDate date;
+    private LocalDateTime dateTime;
     private double amount;
 
-    public Payment(Card creditCard, LocalDate paymentDate, double paidAmount) {
+    public Payment(Card creditCard, LocalDateTime paymentDateTime, double paidAmount) {
         this.card = creditCard;
-        this.date = paymentDate;
+        this.dateTime = paymentDateTime;
         this.amount = paidAmount;
     }
 
     public String toString() {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
         return "Paid to Card: " + card + "\n"
-                    + "Payment Date: " + date + "\n"
-                    + "Payment Amount: " + currency.format(amount) + "\n";
+                + "Payment Date: " + dateTime.format(format) + "\n"
+                + "Payment Amount: " + currency.format(amount) + "\n";
     }
 }

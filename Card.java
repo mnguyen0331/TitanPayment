@@ -7,9 +7,11 @@ public enum Card {
     DISCOVER(0.005f);
 
     final float TRANSACTION_FEE;
+
     private double balance;
     private double paidAmount;
-    private ArrayList<Purchase> purchases = new ArrayList<Purchase>();
+    private ArrayList<Purchase> purchases = new ArrayList<>();
+    private ArrayList<Payment> payments = new ArrayList<Payment>();
 
     Card(float transactionFee) {
         this.TRANSACTION_FEE = transactionFee;
@@ -19,8 +21,16 @@ public enum Card {
         return purchases;
     }
 
+    public ArrayList<Payment> getPayments() {
+        return payments;
+    }
+
+    public void addPayment(Payment newPayment) {
+        payments.add(newPayment);
+    }
+
     public void addPurchase(Purchase newPurchase) {
-        purchases.add(newPurchase);
+        this.purchases.add(newPurchase);
         balance += newPurchase.getAmountPaidUsingCard();
     }
 
@@ -32,12 +42,16 @@ public enum Card {
         return paidAmount;
     }
 
-    public void resetBalance() { // when paidAmount == balance
+    public void balanceAdjusted(double paidAmount) {
         balance = balance - paidAmount;
-        paidAmount = 0;
-        for (Purchase purchase : purchases) {
-            purchase.changeStatus();
+        if (Double.compare(balance, 0) == 0) {
+            for (Purchase purchase : purchases)
+                purchase.changeStatus();
         }
+    }
+
+    public void resetPaidAmount() {
+        paidAmount = 0;
     }
 
     public void addPaidAmount(double amount) {
@@ -46,8 +60,8 @@ public enum Card {
 
     public static Card getCardType(Scanner scanner) {
         Card card;
-        System.out.print("What is the type of your credit card? ");
-        String cardName = scanner.next().toUpperCase();
+        System.out.print("Enter credit card type: ");
+        String cardName = scanner.nextLine().trim().toUpperCase();
         while (true) {
             if (cardName.equals("AMEX")) {
                 card = Card.AMEX;
@@ -59,9 +73,9 @@ public enum Card {
                 card = Card.DISCOVER;
                 break;
             } else {
-                System.out.println("\nInvalid card name. Please try again\n");
-                System.out.print("What is the type of your credit card? ");
-                cardName = scanner.next().toUpperCase();
+                System.out.println("\nInvalid card type. Please try again\n");
+                System.out.print("Enter credit card type: ");
+                cardName = scanner.nextLine().trim().toUpperCase();
             }
         }
         return card;
