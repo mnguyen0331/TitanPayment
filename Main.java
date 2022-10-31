@@ -43,10 +43,12 @@ public class Main {
                                     break;
 
                                 case 4:
+                                    Helper.wait(1000);
                                     currentUser.getAmountDue();
                                     break;
 
                                 case 5:
+                                    Helper.wait(1000);
                                     currentUser.getTotalAmountPaid();
                                     break;
 
@@ -67,8 +69,7 @@ public class Main {
                                     System.out.println("Invalid option. Please try again!\n");
                             }
                             displayMenu();
-                            System.out.print("Pick an acion from the menu: ");
-                            userSelection = scanner.nextInt();
+                            userSelection = Helper.getIntFromUser(scanner);
                         }
 
                     } else

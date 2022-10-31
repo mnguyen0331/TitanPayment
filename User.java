@@ -22,7 +22,7 @@ public class User {
         System.out.print("Enter your username: ");
         userName = userScanner.next().trim();
         while (wasUserNameExisted(userName)) {
-            System.out.println("Denied. Account \"" + userName + "\"already exists!");
+            System.out.println("Denied. Account \"" + userName + "\" already exists!");
             System.out.print("Enter a different user name: ");
             userName = userScanner.next().trim();
         }
@@ -140,8 +140,8 @@ public class User {
                     maximumPurchase = purchases.get(i);
                 }
             }
-            System.out.println("\nMinimum Transaction:\n" + minimumPurchase);
-            System.out.println("\nMaximum Transaction: \n" + maximumPurchase);
+            System.out.println("Minimum Transaction:" + minimumPurchase);
+            System.out.println("Maximum Transaction:" + maximumPurchase);
         }
 
     }
@@ -226,7 +226,7 @@ public class User {
                 int endIndex = -1; // index of date that is sooner or equal to dateTo
                 int i = 0;
                 int j = purchases.size() - 1;
-                while (i < j) {
+                while (i <= j) {
                     LocalDate lookUpStartDate = purchases.get(i).getDate();
                     LocalDate lookUpEndDate = purchases.get(j).getDate();
 

@@ -19,7 +19,6 @@ public class Purchase {
     public Purchase(Scanner scanner, Card userCard) {
 
         System.out.print("Enter purchase name: ");
-        scanner.nextLine();
         name = scanner.nextLine();
 
         date = Helper.getDateFromInput(scanner);
