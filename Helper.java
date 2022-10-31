@@ -43,7 +43,7 @@ public class Helper {
     }
 
     public static void wait(int miliSecond) {
-        System.out.println("System Processing ..........");
+        System.out.println("\nSystem Processing ..................................");
         try {
             Thread.sleep(miliSecond);
         } catch (InterruptedException e) {

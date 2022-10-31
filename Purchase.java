@@ -1,6 +1,4 @@
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.text.NumberFormat;
 import java.util.Scanner;
 
 public class Purchase {
@@ -42,6 +40,10 @@ public class Purchase {
         return date;
     }
 
+    public Card getCard() {
+        return cardUse;
+    }
+
     public double getAmountPaid() {
         return amountPaid;
     }
@@ -64,19 +66,6 @@ public class Purchase {
 
     public void changeStatus() {
         status = "Paid";
-    }
-
-    public String toString() {
-        NumberFormat currency = NumberFormat.getCurrencyInstance();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        return "\nPurchase name: " + name + "\n"
-                + "Date: " + date.format(format) + "\n"
-                + "Purchase card: " + cardUse + "\n"
-                + "Amount paid: " + currency.format(amountPaid) + "\n"
-                + "Amount paid using card: " + currency.format(amountPaidUsingCard) + "\n"
-                + "Convenient amount: " + currency.format(convinientAmount) + "\n"
-                + "Billing cycle: " + billingCycle + "\n"
-                + "Status: " + status + "\n";
     }
 
     private String fitDateIntoBillingCycle(int month, int year) {

@@ -66,6 +66,7 @@ public class Main {
                                 default:
                                     System.out.println("Invalid option. Please try again!\n");
                             }
+                            Helper.wait(500);
                             displayMenu();
                             userSelection = Helper.getIntFromUser(scanner);
                         }
@@ -85,6 +86,7 @@ public class Main {
             else
                 System.out.println("Invalid option. Please try again!");
 
+            Helper.wait(500);
             displayAccountService();
             userSelection = Helper.getIntFromUser(scanner);
         }

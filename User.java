@@ -123,7 +123,7 @@ public class User {
     public void getMinimumAndMaximumTransaction() {
         ArrayList<Purchase> purchases = creditCard.getPurchases();
         if (purchases.size() == 0) {
-            System.out.println(creditCard + " does not have any purchase.");
+            System.out.println(creditCard + " does not have any transaction.");
         } else {
             double minimumAmount = purchases.get(0).getAmountPaid();
             Purchase minimumPurchase = purchases.get(0);
@@ -141,8 +141,12 @@ public class User {
                     maximumPurchase = purchases.get(i);
                 }
             }
-            System.out.println("\nMinimum Transaction:\n" + minimumPurchase);
-            System.out.println("\nMaximum Transaction: \n" + maximumPurchase);
+            System.out.println("\nMinimum Transaction:");
+            Helper.printPurchaseTitle();
+            Helper.printPurchase(minimumPurchase, creditCard);
+            System.out.println("\nMaximum Transaction:");
+            Helper.printPurchaseTitle();
+            Helper.printPurchase(maximumPurchase, creditCard);
         }
 
     }
