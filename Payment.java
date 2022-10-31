@@ -13,6 +13,10 @@ public class Payment {
         this.amount = paidAmount;
     }
 
+    public double getPaidAmount() {
+        return amount;
+    }
+
     public String toString() {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");

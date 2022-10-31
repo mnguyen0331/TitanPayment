@@ -180,8 +180,6 @@ public class User {
             }
         }
         System.out.println("Success! " + "Your " + creditCard + "was credited " + currency.format(newPaidAmount));
-        creditCard.addPaidAmount(newPaidAmount);
-        creditCard.balanceAdjusted(newPaidAmount);
         Payment newPayment = new Payment(creditCard, paymentDateTime, newPaidAmount);
         creditCard.addPayment(newPayment);
     }

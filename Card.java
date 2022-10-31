@@ -27,10 +27,12 @@ public enum Card {
 
     public void addPayment(Payment newPayment) {
         payments.add(newPayment);
+        paidAmount += newPayment.getPaidAmount();
+        balance -= newPayment.getPaidAmount();
     }
 
     public void addPurchase(Purchase newPurchase) {
-        this.purchases.add(newPurchase);
+        purchases.add(newPurchase);
         balance += newPurchase.getAmountPaidUsingCard();
     }
 
@@ -42,20 +44,8 @@ public enum Card {
         return paidAmount;
     }
 
-    public void balanceAdjusted(double paidAmount) {
-        balance = balance - paidAmount;
-        if (Double.compare(balance, 0) == 0) {
-            for (Purchase purchase : purchases)
-                purchase.changeStatus();
-        }
-    }
-
     public void resetPaidAmount() {
         paidAmount = 0;
-    }
-
-    public void addPaidAmount(double amount) {
-        paidAmount += amount;
     }
 
     public static Card getCardType(Scanner scanner) {
