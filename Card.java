@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public enum Card {
@@ -8,6 +9,9 @@ public enum Card {
 
     final float TRANSACTION_FEE;
 
+    private HashMap<String, ArrayList<Purchase>> purchaseBillingCycles = new HashMap<>();
+    // private HashMap<String, ArrayList<Payment>> paymentBillingCycles = new
+    // HashMap<>();
     private double balance;
     private double paidAmount;
     private ArrayList<Purchase> purchases = new ArrayList<>();
@@ -25,6 +29,10 @@ public enum Card {
         return payments;
     }
 
+    public HashMap<String, ArrayList<Purchase>> getPurchaseBillingCycles() {
+        return purchaseBillingCycles;
+    }
+
     public void addPayment(Payment newPayment) {
         payments.add(newPayment);
         paidAmount += newPayment.getPaidAmount();
@@ -34,6 +42,14 @@ public enum Card {
     public void addPurchase(Purchase newPurchase) {
         purchases.add(newPurchase);
         balance += newPurchase.getAmountPaidUsingCard();
+        String billingCycle = newPurchase.getBillingCycle();
+        if (purchaseBillingCycles.containsKey(billingCycle))
+            purchaseBillingCycles.get(billingCycle).add(newPurchase);
+        else {
+            ArrayList<Purchase> newPurchases = new ArrayList<>();
+            newPurchases.add(newPurchase);
+            purchaseBillingCycles.put(billingCycle, newPurchases);
+        }
     }
 
     public double getBalance() {

@@ -43,7 +43,7 @@ public class Main {
                                     break;
 
                                 case 4:
-                                    currentUser.getAmountDue();
+                                    currentUser.getAmountDue(scanner);
                                     break;
 
                                 case 5:

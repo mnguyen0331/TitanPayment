@@ -146,10 +146,16 @@ public class User {
 
     }
 
-    public void getAmountDue() {
+    public void getAmountDue(Scanner scanner) {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
-        double amountDue = creditCard.getBalance();
-        System.out.println("Your " + creditCard + " due balance is: " + currency.format(amountDue));
+        System.out.print("Enter billing cycle to view purchase: ");
+        String billingCycle = scanner.nextLine();
+        HashMap<String, ArrayList<Purchase>> purchaseBillingCycles = creditCard.getPurchaseBillingCycles();
+        ArrayList<Purchase> purchases = purchaseBillingCycles.get(billingCycle);
+        double dueAmount = 0;
+        for (Purchase p : purchases)
+            dueAmount += p.getAmountPaidUsingCard();
+        System.out.println("The due amount for " + billingCycle + " is: " + currency.format(dueAmount));
     }
 
     public void getTotalAmountPaid() {
