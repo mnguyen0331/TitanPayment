@@ -1,3 +1,10 @@
+/*
+ * Author: Phu Nguyen
+ * Date: 10/31/2022
+ * Project: Titan Payment System
+ * Course: CPSC335-07 22473
+ */
+
 import java.time.LocalDate;
 import java.util.Scanner;
 

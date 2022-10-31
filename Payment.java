@@ -1,27 +1,38 @@
-import java.text.NumberFormat;
+/*
+ * Author: Phu Nguyen
+ * Date: 10/31/2022
+ * Project: Titan Payment System
+ * Course: CPSC335-07 22473
+ */
+
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Payment {
     private Card card;
     private LocalDateTime dateTime;
     private double amount;
+    private String billingCycle;
 
-    public Payment(Card creditCard, LocalDateTime paymentDateTime, double paidAmount) {
+    public Payment(Card creditCard, LocalDateTime paymentDateTime, double paidAmount, String billingCycle) {
         this.card = creditCard;
         this.dateTime = paymentDateTime;
         this.amount = paidAmount;
+        this.billingCycle = billingCycle;
     }
 
     public double getPaidAmount() {
         return amount;
     }
 
-    public String toString() {
-        NumberFormat currency = NumberFormat.getCurrencyInstance();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-        return "Paid to Card: " + card + "\n"
-                + "Payment Date: " + dateTime.format(format) + "\n"
-                + "Payment Amount: " + currency.format(amount) + "\n";
+    public String getBillingCycle() {
+        return billingCycle;
+    }
+
+    public Card getPaidcard() {
+        return card;
+    }
+
+    public LocalDateTime getPaidDateTime() {
+        return dateTime;
     }
 }
