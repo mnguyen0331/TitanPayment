@@ -88,7 +88,7 @@ public class Helper {
 
     public static void printPurchase(Purchase p, Card cardName) {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
-        System.out.printf("| %20s | %-10s | %-8s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
+        System.out.printf("| %-20s | %-10s | %-8s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
                 p.getName(), formatDate(p.getDate()), cardName, currency.format(p.getAmountPaid()),
                 currency.format(p.getAmountPaidUsingCard()),
                 currency.format(p.getConvenientAmount()), p.getBillingCycle(), p.getStatus());
