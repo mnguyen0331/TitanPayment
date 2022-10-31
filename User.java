@@ -2,6 +2,7 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -148,14 +149,40 @@ public class User {
 
     public void getAmountDue(Scanner scanner) {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
-        System.out.print("Enter billing cycle to view purchase: ");
-        String billingCycle = scanner.nextLine();
-        HashMap<String, ArrayList<Purchase>> purchaseBillingCycles = creditCard.getPurchaseBillingCycles();
-        ArrayList<Purchase> purchases = purchaseBillingCycles.get(billingCycle);
-        double dueAmount = 0;
-        for (Purchase p : purchases)
-            dueAmount += p.getAmountPaidUsingCard();
-        System.out.println("The due amount for " + billingCycle + " is: " + currency.format(dueAmount));
+        HashMap<String, Double> dueCycles = creditCard.getDueCycles();
+        if (dueCycles.size() == 0) {
+            System.out.println("No data to display");
+            return;
+        }
+        System.out.print("Enter billing cycle to view due amount (enter to view all): ");
+        String billingCycle = scanner.nextLine().trim();
+        if (billingCycle == "") {
+            for (String billCycle : dueCycles.keySet()) {
+                double value = dueCycles.get(billCycle);
+                System.out.println(billCycle + ": " + currency.format(value));
+            }
+        } else if (!dueCycles.containsKey(billingCycle)) {
+            System.out.println(billingCycle + " bill does not exist");
+            System.out.println("All available cycles are: " + dueCycles.keySet());
+        } else {
+            System.out.println(
+                    "The due amount for " + billingCycle + " is: " + currency.format(dueCycles.get(billingCycle)));
+        }
+
+        // HashMap<String, ArrayList<Purchase>> purchaseBillingCycles =
+        // creditCard.getPurchaseBillingCycles();
+        // if (!purchaseBillingCycles.containsKey(billingCycle)) {
+        // System.out.println(billingCycle + " bill does not exist!");
+        // System.out.println("All available cycles are: " +
+        // purchaseBillingCycles.keySet());
+        // return;
+        // }
+        // ArrayList<Purchase> purchases = purchaseBillingCycles.get(billingCycle);
+        // double dueAmount = 0;
+        // for (Purchase p : purchases)
+        // dueAmount += p.getAmountPaidUsingCard();
+        // System.out.println("The due amount for " + billingCycle + " is: " +
+        // currency.format(dueAmount));
     }
 
     public void getTotalAmountPaid() {
@@ -209,7 +236,9 @@ public class User {
             String reply = scanner.nextLine();
             if (reply.equalsIgnoreCase("yes")) {
                 Helper.wait(1000);
-                System.out.println(purchases);
+                Helper.printPurchaseTitle();
+                for (Purchase p : purchases)
+                    Helper.printPurchase(p, creditCard);
             }
 
             else {
@@ -226,11 +255,12 @@ public class User {
                     dateTo = Helper.getDateFromInput(scanner);
                 }
                 Helper.wait(1000);
+                Helper.printPurchaseTitle();
                 int startIndex = -1;// index of date that is later or equal to dateFrom
                 int endIndex = -1; // index of date that is sooner or equal to dateTo
                 int i = 0;
                 int j = purchases.size() - 1;
-                while (i < j) {
+                while (i <= j) {
                     LocalDate lookUpStartDate = purchases.get(i).getDate();
                     LocalDate lookUpEndDate = purchases.get(j).getDate();
 
@@ -248,10 +278,11 @@ public class User {
                         break;
                 }
 
-                System.out.println(purchases.subList(startIndex, endIndex + 1)); // [startIndex, endIndex)
-
+                List<Purchase> sub = purchases.subList(startIndex, endIndex + 1); // [startIndex, // endIndex)
+                for (Purchase p : sub)
+                    Helper.printPurchase(p, creditCard);
             }
-
+            Helper.printDash();
         }
     }
 }

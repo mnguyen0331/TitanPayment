@@ -19,7 +19,6 @@ public class Purchase {
     public Purchase(Scanner scanner, Card userCard) {
 
         System.out.print("Enter purchase name: ");
-        scanner.nextLine();
         name = scanner.nextLine();
 
         date = Helper.getDateFromInput(scanner);
@@ -33,6 +32,10 @@ public class Purchase {
         convinientAmount = amountPaid * CONVENIENT_FEE;
 
         status = "Due";
+    }
+
+    public String getName() {
+        return name;
     }
 
     public LocalDate getDate() {
@@ -53,6 +56,10 @@ public class Purchase {
 
     public String getBillingCycle() {
         return billingCycle;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void changeStatus() {

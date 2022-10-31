@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.time.LocalDate;
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -83,5 +84,25 @@ public class Helper {
     public static String formatDate(LocalDate date) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         return date.format(format);
+    }
+
+    public static void printPurchase(Purchase p, Card cardName) {
+        NumberFormat currency = NumberFormat.getCurrencyInstance();
+        System.out.printf("| %20s | %-10s | %-8s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
+                p.getName(), formatDate(p.getDate()), cardName, currency.format(p.getAmountPaid()),
+                currency.format(p.getAmountPaidUsingCard()),
+                currency.format(p.getConvenientAmount()), p.getBillingCycle(), p.getStatus());
+    }
+
+    public static void printPurchaseTitle() {
+        printDash();
+        System.out.printf("| %-20s | %-10s | %-8s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
+                "NAME", "DATE", "CARD", "AMOUNT", "TOTAL AMOUNT", "FEE", "BILLING CYCLE", "STATUS");
+        printDash();
+    }
+
+    public static void printDash() {
+        System.out.printf(
+                "-----------------------------------------------------------------------------------------------------------------------%n");
     }
 }

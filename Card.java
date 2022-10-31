@@ -9,9 +9,11 @@ public enum Card {
 
     final float TRANSACTION_FEE;
 
-    private HashMap<String, ArrayList<Purchase>> purchaseBillingCycles = new HashMap<>();
+    // private HashMap<String, ArrayList<Purchase>> purchaseBillingCycles = new
+    // HashMap<>();
     // private HashMap<String, ArrayList<Payment>> paymentBillingCycles = new
     // HashMap<>();
+    private HashMap<String, Double> dueCycles = new HashMap<>();
     private double balance;
     private double paidAmount;
     private ArrayList<Purchase> purchases = new ArrayList<>();
@@ -29,8 +31,12 @@ public enum Card {
         return payments;
     }
 
-    public HashMap<String, ArrayList<Purchase>> getPurchaseBillingCycles() {
-        return purchaseBillingCycles;
+    // public HashMap<String, ArrayList<Purchase>> getPurchaseBillingCycles() {
+    // return purchaseBillingCycles;
+    // }
+
+    public HashMap<String, Double> getDueCycles() {
+        return dueCycles;
     }
 
     public void addPayment(Payment newPayment) {
@@ -41,15 +47,22 @@ public enum Card {
 
     public void addPurchase(Purchase newPurchase) {
         purchases.add(newPurchase);
-        balance += newPurchase.getAmountPaidUsingCard();
+        double totalAmount = newPurchase.getAmountPaidUsingCard();
+        balance += totalAmount;
         String billingCycle = newPurchase.getBillingCycle();
-        if (purchaseBillingCycles.containsKey(billingCycle))
-            purchaseBillingCycles.get(billingCycle).add(newPurchase);
-        else {
-            ArrayList<Purchase> newPurchases = new ArrayList<>();
-            newPurchases.add(newPurchase);
-            purchaseBillingCycles.put(billingCycle, newPurchases);
-        }
+        if (dueCycles.containsKey(billingCycle)) {
+            double currentDue = dueCycles.get(billingCycle);
+            double newDue = currentDue + totalAmount;
+            dueCycles.replace(billingCycle, currentDue, newDue);
+        } else
+            dueCycles.put(billingCycle, totalAmount);
+        // if (purchaseBillingCycles.containsKey(billingCycle))
+        // purchaseBillingCycles.get(billingCycle).add(newPurchase);
+        // else {
+        // ArrayList<Purchase> newPurchases = new ArrayList<>();
+        // newPurchases.add(newPurchase);
+        // purchaseBillingCycles.put(billingCycle, newPurchases);
+        // }
     }
 
     public double getBalance() {

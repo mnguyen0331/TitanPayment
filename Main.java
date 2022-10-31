@@ -67,8 +67,7 @@ public class Main {
                                     System.out.println("Invalid option. Please try again!\n");
                             }
                             displayMenu();
-                            System.out.print("Pick an acion from the menu: ");
-                            userSelection = scanner.nextInt();
+                            userSelection = Helper.getIntFromUser(scanner);
                         }
 
                     } else
@@ -101,14 +100,14 @@ public class Main {
 
     public static void displayMenu() {
         System.out.println("\nMenu selection:\n");
-        System.out.println("1. Query account information");
-        System.out.println("2. Upload purchases");
+        System.out.printf("%-30s", "1. Query account information");
+        System.out.printf("%-30s", "2. Upload purchases");
         System.out.println("3. Get minimum and maximum transaction");
-        System.out.println("4. Get amount due");
-        System.out.println("5. Get total amount paid");
+        System.out.printf("%-30s", "4. Get amount due");
+        System.out.printf("%-30s", "5. Get total amount paid");
         System.out.println("6. Pay card");
-        System.out.println("7. Get payment history");
-        System.out.println("8. Display all the purchases made");
+        System.out.printf("%-30s", "7. Get payment history");
+        System.out.printf("%-30s", "8. Display purchases");
         System.out.println("9. Exit\n");
     }
 
