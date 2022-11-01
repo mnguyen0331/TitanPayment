@@ -33,6 +33,7 @@ public class Main {
                         User currentUser = users.get(userName);
                         displayMenu();
                         userSelection = Helper.getIntFromUser(scanner);
+                        Helper.clearScreen();
                         while (userSelection != 9) {
                             switch (userSelection) {
 
@@ -56,7 +57,7 @@ public class Main {
                                 case 5:
                                     currentUser.getTotalAmountPaid(scanner);
                                     break;
-                                    
+
                                 case 6:
                                     currentUser.payCard(scanner);
                                     break;
@@ -76,6 +77,7 @@ public class Main {
                             Helper.wait(500, "Back to Menu .......................................");
                             displayMenu();
                             userSelection = Helper.getIntFromUser(scanner);
+                            Helper.clearScreen();
                         }
 
                     } else
@@ -96,6 +98,7 @@ public class Main {
             Helper.wait(500, "Back to Home .......................................");
             displayAccountService();
             userSelection = Helper.getIntFromUser(scanner);
+            Helper.clearScreen();
         }
         scanner.close();
     }
@@ -111,8 +114,8 @@ public class Main {
         System.out.printf("%-30s", "1. Query account information");
         System.out.printf("%-30s", "2. Upload purchases");
         System.out.println("3. Get minimum and maximum transaction");
-        System.out.printf("%-30s", "4. Get amount due");
-        System.out.printf("%-30s", "5. Get total amount paid");
+        System.out.printf("%-30s", "4. Get total due");
+        System.out.printf("%-30s", "5. Get total payment");
         System.out.println("6. Pay card");
         System.out.printf("%-30s", "7. Get payment history");
         System.out.printf("%-30s", "8. Display purchases");
