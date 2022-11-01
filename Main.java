@@ -56,7 +56,7 @@ public class Main {
                                 case 5:
                                     currentUser.getTotalAmountPaid(scanner);
                                     break;
-
+                                    
                                 case 6:
                                     currentUser.payCard(scanner);
                                     break;

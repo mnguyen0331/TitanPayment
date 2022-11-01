@@ -146,7 +146,6 @@ public class User {
             Helper.printPurchaseTitle();
             Helper.printPurchase(maximumPurchase, creditCard);
         }
-
     }
 
     public void getAmountDue(Scanner scanner) { // O(1) or O(n)
