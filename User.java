@@ -25,7 +25,7 @@ public class User {
     private String country;
     private Card creditCard;
 
-    public User(Scanner userScanner) {
+    public User(Scanner userScanner) { 
 
         System.out.print("Enter your username: ");
         userName = userScanner.next().trim();
@@ -131,7 +131,7 @@ public class User {
         creditCard.addPurchase(newPurchase);
     }
 
-    public void getMinimumAndMaximumTransaction() { // O(nlogn)
+    public void getMinimumAndMaximumTransaction() { // O(1) or O(nlogn)
         ArrayList<Purchase> purchases = creditCard.getPurchases();
         if (purchases.size() == 0) {
             System.out.println(creditCard + " does not have any transaction.");
