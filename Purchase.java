@@ -34,6 +34,7 @@ public class Purchase {
 
         amountPaid = Helper.getPositiveDouble(scanner);
         amountPaidUsingCard = amountPaid + amountPaid * (userCard.TRANSACTION_FEE + CONVENIENT_FEE);
+        amountPaidUsingCard = Math.round(amountPaidUsingCard * 100.0) / 100.0; // Round up to two decimal places
         convinientAmount = amountPaid * CONVENIENT_FEE;
 
         status = "Due";
