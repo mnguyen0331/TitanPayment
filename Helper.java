@@ -126,14 +126,14 @@ public class Helper {
 
     public static void printPayment(Payment p) {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
-        System.out.printf("| %-19s | %-14s | %-8s | %-12s |%n", formatDateTime(p.getPaidDateTime()),
+        System.out.printf("| %-19s | %-14s | %-8s | %-14s |%n", formatDateTime(p.getPaidDateTime()),
                 p.getBillingCycle(),
                 p.getPaidcard(), currency.format(p.getPaidAmount()));
     }
 
     public static void printPaymentTitle() {
-        printDash(66);
-        System.out.printf("| %-19s | %-14s | %-8s | %-12s |%n", "DATE", "BILLING CYCLE", "CARD", "PAID AMOUNT");
-        printDash(66);
+        printDash(68);
+        System.out.printf("| %-19s | %-14s | %-8s | %-14s |%n", "DATE", "BILLING CYCLE", "CARD", "PAYMENT AMOUNT");
+        printDash(68);
     }
 }

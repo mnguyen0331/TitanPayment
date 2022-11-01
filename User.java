@@ -243,7 +243,7 @@ public class User {
             for (Payment payment : payments) { // O(n)
                 Helper.printPayment(payment);
             }
-            Helper.printDash(66);
+            Helper.printDash(68);
         }
     }
 
