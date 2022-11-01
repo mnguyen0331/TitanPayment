@@ -1,6 +1,11 @@
+/*
+ * Author: Phu Nguyen
+ * Date: 10/31/2022
+ * Project: Titan Payment System
+ * Course: CPSC335-07 22473
+ */
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.text.NumberFormat;
 import java.util.Scanner;
 
 public class Purchase {
@@ -29,13 +34,22 @@ public class Purchase {
 
         amountPaid = Helper.getPositiveDouble(scanner);
         amountPaidUsingCard = amountPaid + amountPaid * (userCard.TRANSACTION_FEE + CONVENIENT_FEE);
+        amountPaidUsingCard = Math.round(amountPaidUsingCard * 100.0) / 100.0; // Round up to two decimal places
         convinientAmount = amountPaid * CONVENIENT_FEE;
 
         status = "Due";
     }
 
+    public String getName() {
+        return name;
+    }
+
     public LocalDate getDate() {
         return date;
+    }
+
+    public Card getCard() {
+        return cardUse;
     }
 
     public double getAmountPaid() {
@@ -54,21 +68,12 @@ public class Purchase {
         return billingCycle;
     }
 
-    public void changeStatus() {
-        status = "Paid";
+    public String getStatus() {
+        return status;
     }
 
-    public String toString() {
-        NumberFormat currency = NumberFormat.getCurrencyInstance();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        return "\nPurchase name: " + name + "\n"
-                + "Date: " + date.format(format) + "\n"
-                + "Purchase card: " + cardUse + "\n"
-                + "Amount paid: " + currency.format(amountPaid) + "\n"
-                + "Amount paid using card: " + currency.format(amountPaidUsingCard) + "\n"
-                + "Convenient amount: " + currency.format(convinientAmount) + "\n"
-                + "Billing cycle: " + billingCycle + "\n"
-                + "Status: " + status + "\n";
+    public void changeStatus() {
+        status = "Paid";
     }
 
     private String fitDateIntoBillingCycle(int month, int year) {

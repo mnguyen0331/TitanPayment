@@ -1,5 +1,14 @@
+/*
+ * Author: Phu Nguyen
+ * Date: 10/31/2022
+ * Project: Titan Payment System
+ * Course: CPSC335-07 22473
+ */
+
 import java.util.Scanner;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -41,8 +50,8 @@ public class Helper {
         return result;
     }
 
-    public static void wait(int miliSecond) {
-        System.out.println("System Processing ..........");
+    public static void wait(int miliSecond, String msg) { // Stop the program for a set amount of miliseconds
+        System.out.println("\n" + msg + "\n");
         try {
             Thread.sleep(miliSecond);
         } catch (InterruptedException e) {
@@ -71,7 +80,7 @@ public class Helper {
 
     }
 
-    public static boolean areDatesCorrect(LocalDate from, LocalDate to, LocalDate max) {
+    public static boolean areDatesCorrect(LocalDate from, LocalDate to, LocalDate max) { // validate Date inputs
         if (from.isAfter(to))
             return false;
         else if (from.isAfter(max))
@@ -83,5 +92,42 @@ public class Helper {
     public static String formatDate(LocalDate date) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         return date.format(format);
+    }
+
+    public static String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+        return dateTime.format(format);
+    }
+
+    public static void printPurchase(Purchase p, Card cardName) {
+        NumberFormat currency = NumberFormat.getCurrencyInstance();
+        System.out.printf("| %-20s | %-10s | %-8s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
+                p.getName(), formatDate(p.getDate()), cardName, currency.format(p.getAmountPaid()),
+                currency.format(p.getAmountPaidUsingCard()),
+                currency.format(p.getConvenientAmount()), p.getBillingCycle(), p.getStatus());
+    }
+
+    public static void printPurchaseTitle() {
+        printDash(119);
+        System.out.printf("| %-20s | %-10s | %-8s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
+                "NAME", "DATE", "CARD", "AMOUNT", "TOTAL AMOUNT", "FEE", "BILLING CYCLE", "STATUS");
+        printDash(119);
+    }
+
+    public static void printDash(int numRepeat) {
+        System.out.println("-".repeat(numRepeat));
+    }
+
+    public static void printPayment(Payment p) {
+        NumberFormat currency = NumberFormat.getCurrencyInstance();
+        System.out.printf("| %-19s | %-14s | %-8s | %-12s |%n", formatDateTime(p.getPaidDateTime()),
+                p.getBillingCycle(),
+                p.getPaidcard(), currency.format(p.getPaidAmount()));
+    }
+
+    public static void printPaymentTitle() {
+        printDash(66);
+        System.out.printf("| %-19s | %-14s | %-8s | %-12s |%n", "DATE", "BILLING CYCLE", "CARD", "PAID AMOUNT");
+        printDash(66);
     }
 }

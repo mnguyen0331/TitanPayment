@@ -1,4 +1,12 @@
+/*
+ * Author: Phu Nguyen
+ * Date: 10/31/2022
+ * Project: Titan Payment System
+ * Course: CPSC335-07 22473
+ */
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public enum Card {
@@ -8,8 +16,8 @@ public enum Card {
 
     final float TRANSACTION_FEE;
 
-    private double balance;
-    private double paidAmount;
+    private HashMap<String, Double> dueCycles = new HashMap<>(); // faster key-value access, not ordered
+    private HashMap<String, Double> paidCycles = new HashMap<>(); // store due or paid according to billing cycle
     private ArrayList<Purchase> purchases = new ArrayList<>();
     private ArrayList<Payment> payments = new ArrayList<Payment>();
 
@@ -25,37 +33,49 @@ public enum Card {
         return payments;
     }
 
-    public void addPayment(Payment newPayment) {
+    public HashMap<String, Double> getDueCycles() {
+        return dueCycles;
+    }
+
+    public HashMap<String, Double> getPaidCycles() {
+        return paidCycles;
+    }
+
+    public void addPayment(Payment newPayment) { // O(1)
         payments.add(newPayment);
-    }
+        double paidAmount = newPayment.getPaidAmount();
+        String billingCycle = newPayment.getBillingCycle();
 
-    public void addPurchase(Purchase newPurchase) {
-        this.purchases.add(newPurchase);
-        balance += newPurchase.getAmountPaidUsingCard();
-    }
+        // add paid amount to billing cycle
+        if (paidCycles.containsKey(billingCycle)) { // billing cycle exists
+            double lastPayment = paidCycles.get(billingCycle);
+            double currentPayment = lastPayment + paidAmount;
+            paidCycles.replace(billingCycle, lastPayment, currentPayment);
+        } else
+            paidCycles.put(billingCycle, paidAmount);
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public double getPaidAmount() {
-        return paidAmount;
-    }
-
-    public void balanceAdjusted(double paidAmount) {
-        balance = balance - paidAmount;
-        if (Double.compare(balance, 0) == 0) {
-            for (Purchase purchase : purchases)
-                purchase.changeStatus();
+        // subtract paid amount from previous due
+        double lastDue = dueCycles.get(billingCycle);
+        double currentDue = lastDue - paidAmount;
+        dueCycles.replace(billingCycle, lastDue, currentDue);
+        if (currentDue == 0) {
+            dueCycles.remove(billingCycle); // remove $0 due bill from cycles
+            for (Purchase p : purchases)
+                if (p.getBillingCycle().equals(billingCycle))
+                    p.changeStatus(); // Change to paid
         }
     }
 
-    public void resetPaidAmount() {
-        paidAmount = 0;
-    }
-
-    public void addPaidAmount(double amount) {
-        paidAmount += amount;
+    public void addPurchase(Purchase newPurchase) { // O(1) similar to addPayment
+        purchases.add(newPurchase);
+        double dueAmount = newPurchase.getAmountPaidUsingCard();
+        String billingCycle = newPurchase.getBillingCycle();
+        if (dueCycles.containsKey(billingCycle)) {
+            double lastDue = dueCycles.get(billingCycle);
+            double currentDue = lastDue + dueAmount;
+            dueCycles.replace(billingCycle, lastDue, currentDue);
+        } else
+            dueCycles.put(billingCycle, dueAmount);
     }
 
     public static Card getCardType(Scanner scanner) {
