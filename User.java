@@ -25,7 +25,7 @@ public class User {
     private String country;
     private Card creditCard;
 
-    public User(Scanner userScanner) { 
+    public User(Scanner userScanner) {
 
         System.out.print("Enter your username: ");
         userName = userScanner.next().trim();
@@ -168,7 +168,7 @@ public class User {
             System.out.println("All available cycles are: " + dueCycles.keySet());
         } else { // O(1)
             System.out.println(
-                    "The due amount for " + billingCycle + " is: " + currency.format(dueCycles.get(billingCycle)));
+                    "The amount due for " + billingCycle + " is: " + currency.format(dueCycles.get(billingCycle)));
         }
     }
 
@@ -176,10 +176,10 @@ public class User {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
         HashMap<String, Double> paidCycles = creditCard.getPaidCycles();
         if (paidCycles.size() == 0) {
-            System.out.println("\nNo paid amount to view.");
+            System.out.println("\nNo payment amount to view.");
             return;
         }
-        System.out.print("Enter billing cycle to view paid amount (leave blank to view all): ");
+        System.out.print("Enter billing cycle to view payment amount (leave blank to view all): ");
         String billingCycle = scanner.nextLine().trim();
         Helper.wait(1000, "System Processing ..................................");
         if (billingCycle == "") {
@@ -192,7 +192,7 @@ public class User {
             System.out.println("All available cycles are: " + paidCycles.keySet());
         } else {
             System.out.println(
-                    "The paid amount for " + billingCycle + " is: " + currency.format(paidCycles.get(billingCycle)));
+                    "The payment amount for " + billingCycle + " is: " + currency.format(paidCycles.get(billingCycle)));
         }
     }
 
@@ -215,13 +215,13 @@ public class User {
             LocalDateTime paymentDateTime = LocalDateTime.now(); // current date and time of local machine
             double dueAmount = dueCycles.get(billingCycle);
             double paidAmount = 0;
-            System.out.println("The due amount for " + billingCycle + " is " + currency.format(dueAmount));
+            System.out.println("The amount due for " + billingCycle + " is " + currency.format(dueAmount));
             System.out.print("Do you want to pay all of it (yes or no)?  ");
             String reply = scanner.nextLine();
             if (reply.equalsIgnoreCase("yes")) // paid all
                 paidAmount = dueAmount;
             else { // paid partially
-                paidAmount = Helper.getPositiveDouble(scanner);
+                paidAmount = Helper.getPositiveDouble(scanner, "Payment amount");
                 if (Double.compare(paidAmount, dueAmount) > 0) {
                     System.out.println("You are overpaying! Please try again.");
                     return;
@@ -265,15 +265,15 @@ public class User {
             else { // O(n)
                 int purchasesSize = purchases.size();
                 LocalDate latestDate = purchases.get(purchasesSize - 1).getDate();
-                System.out.println("The latest date is " + Helper.formatDate(latestDate));
+                System.out.println("The latest purchase date is " + Helper.formatDate(latestDate));
                 System.out.println("Enter the appropriate range of dates to view purchases:");
-                LocalDate dateFrom = Helper.getDateFromInput(scanner);
-                LocalDate dateTo = Helper.getDateFromInput(scanner);
+                LocalDate dateFrom = Helper.getDateFromInput(scanner, "From date");
+                LocalDate dateTo = Helper.getDateFromInput(scanner, "To date");
                 while (!Helper.areDatesCorrect(dateFrom, dateTo, latestDate)) {
-                    System.out.println("Error! The latest date is " + Helper.formatDate(latestDate));
+                    System.out.println("Error! The latest purchase date is " + Helper.formatDate(latestDate));
                     System.out.println("Enter the appropriate range of dates to view purchases:");
-                    dateFrom = Helper.getDateFromInput(scanner);
-                    dateTo = Helper.getDateFromInput(scanner);
+                    dateFrom = Helper.getDateFromInput(scanner, "From date");
+                    dateTo = Helper.getDateFromInput(scanner, "To date");
                 }
                 Helper.wait(1000, "System Processing ..................................");
                 Helper.printPurchaseTitle();
@@ -303,7 +303,7 @@ public class User {
                 for (Purchase p : sub) // O(n)
                     Helper.printPurchase(p, creditCard);
             }
-            Helper.printDash(119);
+            Helper.printDash(122);
         }
     }
 }

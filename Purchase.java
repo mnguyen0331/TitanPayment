@@ -15,27 +15,27 @@ public class Purchase {
     private String name;
     private LocalDate date;
     private Card cardUse;
-    private double amountPaid;
+    private double price;
     private double amountPaidUsingCard;
-    private double convinientAmount;
+    private double fee;
     private String billingCycle;
     private String status;
 
     public Purchase(Scanner scanner, Card userCard) {
 
-        System.out.print("Enter purchase name: ");
+        System.out.print("Purchase name: ");
         name = scanner.nextLine();
 
-        date = Helper.getDateFromInput(scanner);
+        date = Helper.getDateFromInput(scanner, "Purchase date");
 
         billingCycle = fitDateIntoBillingCycle(date.getMonthValue(), date.getYear());
 
         cardUse = userCard;
 
-        amountPaid = Helper.getPositiveDouble(scanner);
-        amountPaidUsingCard = amountPaid + amountPaid * (userCard.TRANSACTION_FEE + CONVENIENT_FEE);
+        price = Helper.getPositiveDouble(scanner, "Purchase price: ");
+        fee = price * (CONVENIENT_FEE + userCard.TRANSACTION_FEE);
+        amountPaidUsingCard = price + fee;
         amountPaidUsingCard = Math.round(amountPaidUsingCard * 100.0) / 100.0; // Round up to two decimal places
-        convinientAmount = amountPaid * CONVENIENT_FEE;
 
         status = "Due";
     }
@@ -52,16 +52,16 @@ public class Purchase {
         return cardUse;
     }
 
-    public double getAmountPaid() {
-        return amountPaid;
+    public double getPrice() {
+        return price;
     }
 
     public double getAmountPaidUsingCard() {
         return amountPaidUsingCard;
     }
 
-    public double getConvenientAmount() {
-        return convinientAmount;
+    public double getFee() {
+        return fee;
     }
 
     public String getBillingCycle() {

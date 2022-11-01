@@ -13,21 +13,21 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Helper {
-    public static double getPositiveDouble(Scanner scanner) {
+    public static double getPositiveDouble(Scanner scanner, String label) {
         double result = 0;
-        System.out.print("Paid Amount: ");
+        System.out.print(label + ": ");
         String userInput = scanner.nextLine();
         while (true) {
             try {
                 result = Double.parseDouble(userInput);
                 if (result < 0)
-                    System.out.println("Paid Amount cannot be negative.");
+                    System.out.println(label + " cannot be negative.");
                 else
                     break;
             } catch (NumberFormatException e) {
                 System.out.println(userInput + " is not a number. Please try again.");
             }
-            System.out.print("Paid Amount: ");
+            System.out.print(label + ": ");
             userInput = scanner.nextLine();
         }
         return result;
@@ -59,9 +59,14 @@ public class Helper {
         }
     }
 
-    public static LocalDate getDateFromInput(Scanner scanner) {
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    public static LocalDate getDateFromInput(Scanner scanner, String label) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        System.out.print("Date (Entered as MM/dd/yyyy): ");
+        System.out.print(label + " (MM/dd/yyyy): ");
         String dateInput = scanner.nextLine();
         LocalDate date = null;
         while (true) {
@@ -71,7 +76,7 @@ public class Helper {
 
             } catch (DateTimeParseException e) {
                 System.out.println("\nInvalid date. Please try again\n");
-                System.out.print("Date (Entered as MM/dd/yyyy): ");
+                System.out.print(label + " (MM/dd/yyyy): ");
                 dateInput = scanner.nextLine();
             }
         }
@@ -101,17 +106,18 @@ public class Helper {
 
     public static void printPurchase(Purchase p, Card cardName) {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
-        System.out.printf("| %-20s | %-10s | %-8s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
-                p.getName(), formatDate(p.getDate()), cardName, currency.format(p.getAmountPaid()),
+        System.out.printf("| %-20s | %-10s | %-11s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
+                p.getName(), formatDate(p.getDate()), cardName, currency.format(p.getPrice()),
+                currency.format(p.getFee()),
                 currency.format(p.getAmountPaidUsingCard()),
-                currency.format(p.getConvenientAmount()), p.getBillingCycle(), p.getStatus());
+                p.getBillingCycle(), p.getStatus());
     }
 
     public static void printPurchaseTitle() {
-        printDash(119);
-        System.out.printf("| %-20s | %-10s | %-8s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
-                "NAME", "DATE", "CARD", "AMOUNT", "TOTAL AMOUNT", "FEE", "BILLING CYCLE", "STATUS");
-        printDash(119);
+        printDash(122);
+        System.out.printf("| %-20s | %-10s | %-11s | %-12s | %-12s | %-12s | %-14s | %-6s |%n",
+                "NAME", "DATE", "CREDIT CARD", "PRICE", "FEE", "TOTAL", "BILLING CYCLE", "STATUS");
+        printDash(122);
     }
 
     public static void printDash(int numRepeat) {
