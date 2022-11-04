@@ -160,8 +160,8 @@ public class User {
         Helper.wait(1000, "System Processing ..................................");
         if (billingCycle == "") {
             for (String billCycle : dueCycles.keySet()) { // Loop through each key O(n)
-                double dueAmount = dueCycles.get(billCycle); // get amount from each key
-                System.out.println(billCycle + ": " + currency.format(dueAmount));
+                double amountDue = dueCycles.get(billCycle); // get amount from each key
+                System.out.println(billCycle + ": " + currency.format(amountDue));
             }
         } else if (!dueCycles.containsKey(billingCycle)) { // O(1)
             System.out.println("Error. " + billingCycle + " bill does not exist");
@@ -184,8 +184,8 @@ public class User {
         Helper.wait(1000, "System Processing ..................................");
         if (billingCycle == "") {
             for (String billCycle : paidCycles.keySet()) {
-                double paidAmount = paidCycles.get(billCycle);
-                System.out.println(billCycle + ": " + currency.format(paidAmount));
+                double amountPaid = paidCycles.get(billCycle);
+                System.out.println(billCycle + ": " + currency.format(amountPaid));
             }
         } else if (!paidCycles.containsKey(billingCycle)) {
             System.out.println("Error. " + billingCycle + " payment does not exist");
@@ -213,22 +213,23 @@ public class User {
             return;
         } else { // O(1)
             LocalDateTime paymentDateTime = LocalDateTime.now(); // current date and time of local machine
-            double dueAmount = dueCycles.get(billingCycle);
-            double paidAmount = 0;
-            System.out.println("The amount due for " + billingCycle + " is " + currency.format(dueAmount));
+            double amountDue = dueCycles.get(billingCycle);
+            double amountPaid = 0;
+            System.out.println("The amount due for " + billingCycle + " is " + currency.format(amountDue));
             System.out.print("Do you want to pay all of it (yes or no)?  ");
             String reply = scanner.nextLine();
             if (reply.equalsIgnoreCase("yes")) // paid all
-                paidAmount = dueAmount;
+                amountPaid = amountDue;
             else { // paid partially
-                paidAmount = Helper.getPositiveDouble(scanner, "Payment amount");
-                if (Double.compare(paidAmount, dueAmount) > 0) {
+                amountPaid = Helper.getPositiveDouble(scanner, "Payment amount");
+                double difference = Helper.roundDouble(amountPaid - amountDue);
+                if (difference > 0.00) {
                     System.out.println("You are overpaying! Please try again.");
                     return;
                 }
             }
-            System.out.println("Approved! " + "Your " + creditCard + " was credited " + currency.format(paidAmount));
-            Payment newPayment = new Payment(creditCard, paymentDateTime, paidAmount, billingCycle);
+            System.out.println("Approved! " + "Your " + creditCard + " was credited " + currency.format(amountPaid));
+            Payment newPayment = new Payment(creditCard, paymentDateTime, amountPaid, billingCycle);
             creditCard.addPayment(newPayment);
         }
     }

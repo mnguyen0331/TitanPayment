@@ -33,9 +33,8 @@ public class Purchase {
         cardUse = userCard;
 
         price = Helper.getPositiveDouble(scanner, "Purchase price: ");
-        fee = price * (CONVENIENT_FEE + userCard.TRANSACTION_FEE);
-        amountPaidUsingCard = price + fee;
-        amountPaidUsingCard = Math.round(amountPaidUsingCard * 100.0) / 100.0; // Round up to two decimal places
+        fee = Helper.roundDouble(price * (CONVENIENT_FEE + userCard.TRANSACTION_FEE));
+        amountPaidUsingCard = Helper.roundDouble(price + fee);
 
         status = "Due";
     }

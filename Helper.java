@@ -30,7 +30,11 @@ public class Helper {
             System.out.print(label + ": ");
             userInput = scanner.nextLine();
         }
-        return result;
+        return roundDouble(result);
+    }
+
+    public static double roundDouble(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 
     public static int getIntFromUser(Scanner scanner) {

@@ -49,16 +49,16 @@ public enum Card {
         // add paid amount to billing cycle
         if (paidCycles.containsKey(billingCycle)) { // billing cycle exists
             double lastPayment = paidCycles.get(billingCycle);
-            double currentPayment = lastPayment + paidAmount;
+            double currentPayment = Helper.roundDouble(lastPayment + paidAmount);
             paidCycles.replace(billingCycle, lastPayment, currentPayment);
         } else
             paidCycles.put(billingCycle, paidAmount);
 
         // subtract paid amount from previous due
         double lastDue = dueCycles.get(billingCycle);
-        double currentDue = lastDue - paidAmount;
+        double currentDue = Helper.roundDouble(lastDue - paidAmount);
         dueCycles.replace(billingCycle, lastDue, currentDue);
-        if (currentDue == 0) {
+        if (currentDue == 0.00) {
             dueCycles.remove(billingCycle); // remove $0 due bill from cycles
             for (Purchase p : purchases)
                 if (p.getBillingCycle().equals(billingCycle))
@@ -72,7 +72,7 @@ public enum Card {
         String billingCycle = newPurchase.getBillingCycle();
         if (dueCycles.containsKey(billingCycle)) {
             double lastDue = dueCycles.get(billingCycle);
-            double currentDue = lastDue + dueAmount;
+            double currentDue = Helper.roundDouble(lastDue + dueAmount);
             dueCycles.replace(billingCycle, lastDue, currentDue);
         } else
             dueCycles.put(billingCycle, dueAmount);
